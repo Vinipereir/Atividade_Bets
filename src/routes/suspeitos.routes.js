@@ -5,9 +5,8 @@ const suspeitosRoutes = Router()
 // Array com suspeitos pré-cadastrados
 let suspeitos = [{
 
-    id: Math.floor(Math.random() * 1000000),
+    id: Math.floor(Math.random() * 100),
     nome: "Pedro",
-    idade: 50,
     profissao: "Médico",
     envolvido: "sim",
     suspeita: "alto",
@@ -15,27 +14,24 @@ let suspeitos = [{
 },
 
  {
-    id: Math.floor(Math.random() * 1000000),
+    id: Math.floor(Math.random() * 100),
     nome: "weston",
-    idade: 20,
     profissao: "desenvolvedor",
     envolvido: "nao",
     suspeita: "baixo",
 
  },
  {
-    id: Math.floor(Math.random() * 1000000),
+    id: Math.floor(Math.random() * 100),
     nome: "brayan",
-    idade: 35,
     profissao: "piloto",
     envolvido: "sim",
     suspeita: "medio",
 
  },
  {
-    id: Math.floor(Math.random() * 1000000),
+    id: Math.floor(Math.random() * 100),
     nome: "pablo.victor",
-    idade: 16,
     profissao: "empacotador",
     envolvido: "sim",
     suspeita: "baixo",
@@ -50,11 +46,11 @@ suspeitosRoutes.get("/", (req, res) => {
 
 // Rota para cadastrar um novo suspeito
 suspeitosRoutes.post("/", (req, res) => {
-    const { nome, idade, profissao, envolvido, suspeita } = req.body
+    const { nome, profissao, envolvido, suspeita } = req.body
     // Validação dos campos obrigatórios
-    if (!nome || !idade || !profissao ) {
+    if (!nome || ! !profissao ) {
       return res.status(400).json({
-        message: "Os campos nome, idade, profissao , sao obrigatorios!",
+        message: "Os campos nome, profissao , sao obrigatorios!",
       })
     }
     if (envolvido != "sim" && envolvido != "não") {
@@ -62,20 +58,17 @@ suspeitosRoutes.post("/", (req, res) => {
         message: "Escreva 'sim' ou 'não'! em envolvido",
       })
     }
-    if ((Number.isInteger(idade)) == false) {
-      return res.status(400).send({
-        message: "Digite um numero inteiro para idade! 👍",
-      })
-    }
+        
     // Criação de um novo suspeito
     const novoSuspeito = {
-      id: Math.floor(Math.random() * 1000000),
+      id: Math.floor(Math.random() * 100),
       nome,
-      idade,
       profissao,
       envolvido,
       suspeita,
-    }            
+    }      
+
+   
 
     // Adiciona o novo suspeito ao array de suspeitos
     suspeitos.push(novoSuspeito)
@@ -102,32 +95,18 @@ suspeitosRoutes.post("/", (req, res) => {
     return res.status(200).json(suspeito)                                            
   })                                                                                 
   // Rota para atualizar um suspeito pelo id                                          
-  suspeitosRoutes.put("/:id", (req, res) => {                                        
-    const { id } = req.params                                                        
-    const { nome, idade, profissao, envolvido, suspeita } = req.body                 
-                                                                                              
-    // Busca um suspeito pelo id no array de suspeitos                               
-    const suspeito = suspeitos.find((suspect) => suspect.id == id)                    
-                                                                                              
-    // Validação dos campos obrigatórios                                             
-    if (!nome || !idade || !profissao || !envolvido || !suspeita) {                   
-      return res.status(400).json({                                                  
-        message: "Os campos nome, idade, profissao, envolvido, suspeita sao obrigatorios!",
-      })                                                                         
-    }                                                                                  
-    if (envolvido != "sim" && envolvido != "não") {                                   
-      return res.status(400).send({                                                   
-        message: "Escreva 'sim' ou 'não'! em envolvido",                                
-      })                                                                         
-    }                                                                                  
-    if ((Number.isInteger(idade)) == false) {                                         
-      return res.status(400).send({                                                   
-        message: "Digite um numero inteiro para idade! 👍",                             
-      })                                                                         
-    }                                                                                  
+  suspeitosRoutes.put("/:id", (req, res) => {
+    const { id } = req.params;
+    const { nome, idade, profissão, envolvido,suspeita } = req.body;
+
+    const suspeitoIndex = suspeitos.findIndex(suspeito => suspeito.id === Number(id));
+
+    if (suspeitoIndex < 0) {
+        return res.status(404).send({ message: "Suspeito não encontrado" });
+    }                                                                             
+                                                                           
                                                                                            
-    suspeito.nome = nome                                                            
-    suspeito.idade = idade                                                          
+    suspeito.nome = nome                                                                 
     suspeito.profissao = profissao                                                   
     suspeito.envolvido = envolvido                                                   
     suspeito.suspeita = suspeita                                                     
