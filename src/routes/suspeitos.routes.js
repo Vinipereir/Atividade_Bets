@@ -48,7 +48,7 @@ suspeitosRoutes.get("/", (req, res) => {
 suspeitosRoutes.post("/", (req, res) => {
     const { nome, profissao, envolvido, suspeita } = req.body
     // Validação dos campos obrigatórios
-    if (!nome || ! !profissao ) {
+    if (!nome | !profissao ) {
       return res.status(400).json({
         message: "Os campos nome, profissao , sao obrigatorios!",
       })
